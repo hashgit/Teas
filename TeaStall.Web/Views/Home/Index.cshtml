@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div ng-controller="TeaCtrl">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Base Tea</h2>
+            <p>
+                <select ng-model="CurrentOrder.TeaBase" ng-options="teabase as teabase.Base for teabase in TeaBases track by teabase.Id" ng-change="UpdatePrice()"></select>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Flavor</h2>
+            <p>
+                <select ng-model="CurrentOrder.Flavor" ng-options="flavor as flavor.Flavor for flavor in Flavors track by flavor.Id" ng-change="UpdatePrice()">
+                    <option value="">-- None --</option>
+                </select>                
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>Topping</h2>
+            <p>
+                <div ng-repeat="topping in CurrentOrder.Toppings">
+                    <input type="checkbox" ng-model="topping.IsChecked" ng-change="UpdatePrice()" name="topping-{{topping.Id}}" id="{{topping.Id}}" value="{{topping.Id}}" /> {{topping.Topping}}
+                </div>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Size</h2>
+            <p>
+                <div><input type="radio" ng-change="UpdatePrice()" ng-model="CurrentOrder.Size" name="Size" value="Small" id="smSize" /> Small</div>
+                <div><input type="radio" ng-change="UpdatePrice()" ng-model="CurrentOrder.Size" name="Size" value="Medium" id="mdSize" /> Medium</div>
+                <div><input type="radio" ng-change="UpdatePrice()" ng-model="CurrentOrder.Size" name="Size" value="Large" id="lgSize" /> Large</div>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <h2>
+                Total: {{CurrentOrder.Price}}
+            </h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <input type="button" value="Save Tea" ng-click="SaveOrder()"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Size</th>
+                        <th>Base</th>
+                        <th>Flavor</th>
+                        <th>Topping</th>
+                        <th>Price</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="order in SavedOrders">
+                        <td>{{order.Size}}</td>
+                        <td>{{order.TeaBase.Base}}</td>
+                        <td>{{order.Flavor.Flavor}}</td>
+                        <td>({{ToppingCount(order.Toppings)}}) Toppings</td>
+                        <td>{{order.Price}}</td>
+                        <td><a style="cursor: pointer;" ng-click="EditOrder($index)">Edit</a></td>
+                        <td><a style="cursor: pointer;" ng-click="DeleteOrder($index)">Delete</a></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="pull-right">
+            Total: {{UpdateTotal()}}
+        </div>
+    </div>
+</div>
